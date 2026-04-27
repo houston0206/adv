@@ -1,6 +1,6 @@
-# (_TODO: fill in the title of this assignment here!_)
+# Spellchecker
 
-Authors: (_TODO: fill in your names here!_)
+Authors: El and EK
 
 ## Build commands
 
@@ -10,6 +10,6 @@ Authors: (_TODO: fill in your names here!_)
 
 ## Resources
 
-*   (_TODO: fill in resources here!_)
+*   https://osera.cs.grinnell.edu/ttap/data-structures-labs/spellchecker.html
 *   ...
 *   ...
