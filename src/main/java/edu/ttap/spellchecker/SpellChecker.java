@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.ArrayList;
 
 /**
  * A spellchecker maintains an efficient representation of a dictionary for
@@ -28,6 +29,11 @@ public class SpellChecker {
     private class Node {
         char ch;
         List<Node> children;
+
+        public Node(char ch) {
+            this.ch = ch;
+            this.children = new ArrayList<Node>();
+        }
     }
 
     /** The root of the SpellChecker */
@@ -38,8 +44,25 @@ public class SpellChecker {
      * @param dict the list of words to include in the dictionary
      */
     public SpellChecker(List<String> dict) {
-        // TODO: implement me!
-        
+        root = new Node(' ');
+        for (String word : dict) {
+            add(word);
+        }
+    }
+
+    /**
+     * Checks if a node's children contains a certain character
+     * @param nodes the list of children
+     * @param c the character to search for
+     * @return the node if found, null otherwise
+     */
+    public Node findNode(List<Node> nodes, char c) {
+        for (Node n : nodes) {
+            if (n.ch == c) {
+                return n;
+            }
+        }
+        return null;
     }
 
     /**
@@ -49,8 +72,13 @@ public class SpellChecker {
     public void add(String word) {
         Node cur = root;
         for (int i = 0; i < word.length(); i++) {
-            if (cur.children.contains(word.charAt(i))) {
-                
+            Node find = findNode(cur.children, word.charAt(i));
+            if (find != null) {
+                cur = find;
+            } else {
+                Node nxt = new Node(word.charAt(i));
+                cur.children.add(nxt);
+                cur = nxt;
             }
         }
     }
@@ -61,8 +89,16 @@ public class SpellChecker {
      * @return true if the word is in the dictionary, false otherwise
      */
     public boolean isWord(String word) {
-        // TODO: implement me!
-        return false;
+        Node cur = root;
+        for (int i = 0; i < word.length(); i++) {
+            Node find = findNode(cur.children, word.charAt(i));
+            if (find != null) {
+                cur = find;
+            } else {
+                return false;
+            }
+        }
+        return true;
     }
 
     /**
@@ -72,20 +108,47 @@ public class SpellChecker {
      * @return a list of all possible completions
      */
     public List<String> getOneCharCompletions(String word) {
-        // TOOD: implement me!
-        return null;
+        List<String> lst = new ArrayList<>();
+        Node cur = root;
+        for (int i = 0; i < word.length(); i++) {
+            Node find = findNode(cur.children, word.charAt(i));
+            if (find != null) {
+                cur = find;
+            } else {
+                return lst;
+            }
+        }
+        for (Node n : cur.children) {
+            String w = word + n.ch;
+            lst.add(w);
+        }
+        return lst;
     }
 
 
     /**
      * Returns a list of all words in the dictionary that can be formed by changing
-     * a single character in the given word.
+     * a single character at the end of the given word.
      * @param word the word to correct
      * @return a list of all possible corrections
      */
     public List<String> getOneCharEndCorrections(String word) {
-        // TODO: implement me!
-        return null;
+        List<String> lst = new ArrayList<>();
+        Node cur = root;
+        for (int i = 0; i < word.length() - 1; i++) {
+            Node find = findNode(cur.children, word.charAt(i));
+            if (find != null) {
+                cur = find;
+            } else {
+                return lst;
+            }
+        }
+        for (Node n : cur.children) {
+            String w = word + n.ch;
+            lst.add(w);
+            lst.remove(word.charAt(word.length()-1));
+        }
+        return lst;
     }
 
     /**
