@@ -28,6 +28,7 @@ public class SpellChecker {
     /** A Node of the SpellChecker structure. */
     private class Node {
         char ch;
+
         List<Node> children;
 
         public Node(char ch) {
@@ -146,7 +147,7 @@ public class SpellChecker {
         for (Node n : cur.children) {
             String w = word + n.ch;
             lst.add(w);
-            lst.remove(word.charAt(word.length()-1));
+            lst.remove(word.charAt(word.length() - 1));
         }
         return lst;
     }
