@@ -82,6 +82,8 @@ public class SpellChecker {
                 cur = nxt;
             }
         }
+        Node end = new Node(' ');
+        cur.children.add(end);
     }
 
     /**
@@ -99,7 +101,12 @@ public class SpellChecker {
                 return false;
             }
         }
-        return true;
+        for (Node n : cur.children) {
+            if (n.ch == ' ') {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -121,7 +128,9 @@ public class SpellChecker {
         }
         for (Node n : cur.children) {
             String w = word + n.ch;
-            lst.add(w);
+            if (isWord(w)) {
+                lst.add(w);
+            }
         }
         return lst;
     }
@@ -144,10 +153,12 @@ public class SpellChecker {
                 return lst;
             }
         }
+        String newWord = word.substring(0, word.length() - 1);
         for (Node n : cur.children) {
-            String w = word + n.ch;
-            lst.add(w);
-            lst.remove(word.charAt(word.length() - 1));
+            String w = newWord + n.ch;
+            if (isWord(w)) {
+                lst.add(w);
+            }
         }
         return lst;
     }
